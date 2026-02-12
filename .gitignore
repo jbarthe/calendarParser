@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+test_data.csv
+test_data_js.csv
+new_data.csv
+test_output.pdf
+test_planning_v2.pdf
+launch_app.command
