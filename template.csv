@@ -1,2 +1,7 @@
-Nom,Période 1,Période 2,Période 3,Période 4
-Exemple Nom,Du 01/01/25 au 05/01/25,Du 10/06/25 au 20/06/25,,
+Nom / Equipe,Période 1,Période 2,Période 3,Période 4,Période 5
+ADMINISTRATION,,,,,
+Dupont Jean,Du 01/01/25 au 05/01/25,Du 10/06/25 au 20/06/25,,,
+Durand Marie,"(+2 JS : 24 et 25/02/26)",Du 01/08/25 au 15/08/25,,,
+SERVICE TECHNIQUE,,,,,
+Martin Paul,Du 14/07/25 au 25/07/25,"(+1 JS : 02/05/26)",,,
+Bernard Sophie,Du 20/12/25 au 02/01/26,,,,
