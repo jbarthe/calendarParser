@@ -15,13 +15,13 @@ Transformez votre tableau Excel/CSV/Google Sheets en un calendrier PDF visuel.
 st.sidebar.header("Source de Données")
 
 # Template download
-with open("template.csv", "rb") as file:
+with open("template.xlsx", "rb") as file:
     st.sidebar.download_button(
-        label="📥 Télécharger le modèle CSV",
+        label="📥 Télécharger le modèle Excel",
         data=file,
-        file_name="modele_conges.csv",
-        mime="text/csv",
-        help="Téléchargez ce modèle pour remplir vos congés."
+        file_name="modele_conges.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        help="Modèle Excel avec exemples de couleurs et instructions."
     )
 st.sidebar.markdown("---")
 
