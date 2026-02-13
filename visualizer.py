@@ -176,7 +176,7 @@ def create_gantt_chart(df_leaves):
                 
                 # Label inside the bar with offset
                 ax.text(mid_point, y + y_offset, label,
-                        ha='center', va='center', fontsize=6, color='black', fontweight='bold')
+                        ha='center', va='center', fontsize=6, color='black')
             
             # Y-Label for Person
             # We add it manually or use yticks
