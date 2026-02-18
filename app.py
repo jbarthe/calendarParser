@@ -53,13 +53,23 @@ try:
         if not df_leaves.empty:
             st.subheader("Calendrier Généré")
             
-            # Create chart
-            fig = create_gantt_chart(df_leaves)
-            st.pyplot(fig)
+            # Create chart (returns list of figures)
+            figures = create_gantt_chart(df_leaves)
+            
+            # Display first page preview
+            st.pyplot(figures[0])
+            if len(figures) > 1:
+                st.info(f"Le document contient {len(figures)} pages. Prévisualisation de la page 1.")
             
             # Save to buffer for download
+            from matplotlib.backends.backend_pdf import PdfPages
+            
             pdf_buffer = io.BytesIO()
-            fig.savefig(pdf_buffer, format='pdf', bbox_inches='tight')
+            with PdfPages(pdf_buffer) as pdf:
+                for fig in figures:
+                    pdf.savefig(fig, bbox_inches='tight')
+                    plt.close(fig) # Close to free memory
+                    
             pdf_buffer.seek(0)
             
             st.download_button(
