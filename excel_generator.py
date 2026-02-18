@@ -32,7 +32,11 @@ def generate_excel_gantt(df_leaves):
 
     # 2. Setup Styles
     # Colors
-    colors = ['D1C4E9', 'B39DDB', '9575CD', 'E1BEE7', 'CE93D8'] # Light Violets without #
+    from colors import assign_colors_by_team, COLOR_PALETTES
+    person_color_map = assign_colors_by_team(df_leaves)
+    
+    # Clean up hex for OpenPyXL (remove #)
+    person_color_map_clean = {k: v.lstrip('#') for k, v in person_color_map.items()}
     
     header_fill = PatternFill(start_color="4B0082", end_color="4B0082", fill_type="solid")
     header_font = Font(color="FFFFFF", bold=True)
@@ -99,7 +103,7 @@ def generate_excel_gantt(df_leaves):
     
     # Map person to color index
     people_unique = df_leaves['Name'].unique()
-    person_color_map = {p: colors[i % len(colors)] for i, p in enumerate(people_unique)}
+    # person_color_map calculated above
 
     date_to_col = {d: i+2 for i, d in enumerate(date_range)}
 
@@ -151,7 +155,7 @@ def generate_excel_gantt(df_leaves):
                     continue
 
                 # Style
-                fill_color = person_color_map[person]
+                fill_color = person_color_map_clean[person]
                 fill = PatternFill(start_color=fill_color, end_color=fill_color, fill_type="solid")
                 
                 # Merge

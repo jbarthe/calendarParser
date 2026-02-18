@@ -56,9 +56,7 @@ def create_gantt_chart(df_leaves):
     # COMPACT: Bar height matched to spacing (0.6 spacing -> 0.6 bar to fill)
     bar_height = 0.6
     
-    # Colors
-    # Colors - Light Violet / Purple palette
-    colors = ['#D1C4E9', '#B39DDB', '#9575CD', '#E1BEE7', '#CE93D8'] 
+    # Colors logic moved to colors.py 
     
     # Track Y positions for labels
     y_ticks = []
@@ -78,12 +76,13 @@ def create_gantt_chart(df_leaves):
     # So Name 1 is at Y=Max.
     
     # Calculate min/max dates for axis limits and positioning
+    # Colors
+    from colors import assign_colors_by_team
+    person_color_map = assign_colors_by_team(df_leaves)
+    
+    # Calculate min/max dates for axis limits and positioning
     min_date = df_leaves['Start'].min() - pd.DateOffset(months=1)
     max_date = df_leaves['End'].max() + pd.DateOffset(months=1)
-
-    # Assign specific colors to people to be consistent
-    all_people = df_leaves['Name'].unique()
-    person_color_map = {p: colors[i % len(colors)] for i, p in enumerate(all_people)}
     
     # We detemine Y-coords
     layout = [] # (y, type, label, data)
