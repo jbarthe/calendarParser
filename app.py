@@ -4,6 +4,7 @@ import io
 from parser import load_data, process_leave_data
 from visualizer import create_gantt_chart
 from excel_generator import generate_excel_gantt
+import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Générateur de Planning Congés", layout="wide")
 
