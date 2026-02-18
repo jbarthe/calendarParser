@@ -198,14 +198,21 @@ def process_leave_data(df):
         col0 = str(row.iloc[0]).strip() if pd.notna(row.iloc[0]) else ""
         
         # Check if this row is a Team Header
-        # Heuristic: Col 0 has text, Col 1 is empty or doesn't look like a date range
-        col1 = str(row.iloc[1]).strip() if len(row) > 1 and pd.notna(row.iloc[1]) else ""
+        # Heuristic: Col 0 has text, AND ALL other columns are empty.
+        # This prevents a person who has no leave in Period 1 but has leave in Period 2 from being seen as a Team.
         
-        if col0 and not col1:
+        is_row_content_empty = True
+        for col_idx in range(1, len(row)):
+            val = str(row.iloc[col_idx]).strip() if pd.notna(row.iloc[col_idx]) else ""
+            if val:
+                is_row_content_empty = False
+                break
+        
+        if col0 and is_row_content_empty:
              # Likely a header or empty filler
              # Check if it looks like a team name (uppercase, or just assume it is if not empty)
-             # Also ignore some metadata rows like "Période de référence..."
-             if "Période" in col0 or "CONGES" in col0:
+             # Also ignore some metadata rows like "Période de référence..." or empty instructions
+             if "Période" in col0 or "CONGES" in col0 or "FORMULAIRE" in col0 or "Instructions" in col0:
                  continue
              current_team = col0
              continue
