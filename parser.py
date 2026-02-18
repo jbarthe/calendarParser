@@ -210,11 +210,33 @@ def process_leave_data(df):
         
         if col0 and is_row_content_empty:
              # Likely a header or empty filler
-             # Check if it looks like a team name (uppercase, or just assume it is if not empty)
-             # Also ignore some metadata rows like "Période de référence..." or empty instructions
-             if "Période" in col0 or "CONGES" in col0 or "FORMULAIRE" in col0 or "Instructions" in col0:
-                 continue
-             current_team = col0
+             # Check if it looks like a team name:
+             # 1. Uppercase (e.g. "ADMINISTRATION")
+             # 2. Contains specific keywords (e.g. "Service ...")
+             # 3. Ignore specific metadata strings
+             
+             name_upper = col0.upper()
+             keywords = ["SERVICE", "DIRECTION", "PÔLE", "POLE", "ÉQUIPE", "EQUIPE", "DÉPARTEMENT", "DEPARTEMENT", "AGENCE", "BUREAU"]
+             is_keyword_present = any(k in name_upper for k in keywords)
+             
+             ignore_list = ["PÉRIODE", "PERIODE", "CONGES", "FORMULAIRE", "INSTRUCTIONS", "SOLDE", "RTT", "ANCIENNETÉ"]
+             is_ignored = any(ig in name_upper for ig in ignore_list)
+             
+             # Metric: Must be Uppercase OR contain Keyword. 
+             # And MUST NOT be in ignore list.
+             # Also allow shorter names only if uppercase (e.g. "RH", "DSI")
+             
+             if not is_ignored:
+                 if col0.isupper() or is_keyword_present:
+                     current_team = col0
+                     continue
+             
+             # If it's just a Mixed Case name with no leaves (e.g. "Ludivine"), we treat it as an empty person row.
+             # We assume they belong to 'current_team'.
+             # Since there are no leaves, we just skip adding them to the 'leaves' list.
+             if not is_keyword_present and not col0.isupper():
+                 pass # It's a person with no leaves, do nothing (effectively skipping)
+                 
              continue
              
         if not col0:
