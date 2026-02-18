@@ -67,8 +67,8 @@ def generate_excel_gantt(df_leaves):
         if day.weekday() >= 5: # 5=Sat, 6=Sun
             cell.fill = weekend_fill
             
-        # Set column width small
-        ws.column_dimensions[get_column_letter(col_idx)].width = 3
+        # Set column width small (User requested ~9px, down from ~18px)
+        ws.column_dimensions[get_column_letter(col_idx)].width = 1.5
         
         # Month Header Logic
         if current_month != day.month:
