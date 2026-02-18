@@ -3,6 +3,7 @@ import pandas as pd
 import io
 from parser import load_data, process_leave_data
 from visualizer import create_gantt_chart
+from excel_generator import generate_excel_gantt
 
 st.set_page_config(page_title="Générateur de Planning Congés", layout="wide")
 
@@ -66,6 +67,19 @@ try:
                 data=pdf_buffer,
                 file_name="planning_conges.pdf",
                 mime="application/pdf"
+            )
+
+            # Excel Download
+            excel_wb = generate_excel_gantt(df_leaves)
+            excel_buffer = io.BytesIO()
+            excel_wb.save(excel_buffer)
+            excel_buffer.seek(0)
+            
+            st.download_button(
+                label="Télécharger le Planning en Excel",
+                data=excel_buffer,
+                file_name="planning_conges.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
         else:
             st.warning("Aucune donnée de congé valide n'a été trouvée. Vérifiez le format (ex: 'Du 14/05/25 au 17/05/25').")
