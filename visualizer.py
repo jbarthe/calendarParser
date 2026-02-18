@@ -77,8 +77,8 @@ def create_gantt_chart(df_leaves):
     
     # Calculate min/max dates for axis limits and positioning
     # Colors
-    from colors import assign_colors_by_team
-    person_color_map = assign_colors_by_team(df_leaves)
+    from colors import assign_colors
+    person_color_map, team_color_map = assign_colors(df_leaves)
     
     # Calculate min/max dates for axis limits and positioning
     min_date = df_leaves['Start'].min() - pd.DateOffset(months=1)
@@ -242,7 +242,7 @@ def create_gantt_chart(df_leaves):
                 y_top = y + h_band / 2
                 
                 rect = plt.Rectangle((xmin, y_bottom), xmax - xmin, h_band, 
-                                   facecolor='#E8E6F0', edgecolor='none', zorder=0)
+                                   facecolor=team_color_map.get(item['name'], '#E8E6F0'), edgecolor='none', zorder=0)
                 ax.add_patch(rect)
                 ax.axhline(y=y_bottom, xmin=0, xmax=1, color='black', linewidth=1.0)
                 ax.axhline(y=y_top, xmin=0, xmax=1, color='black', linewidth=1.0)

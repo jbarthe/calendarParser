@@ -28,27 +28,38 @@ COLOR_PALETTES = [
     ['#ECEFF1', '#CFD8DC', '#B0BEC5', '#90A4AE', '#78909C', '#607D8B', '#546E7A', '#455A64', '#37474F', '#263238']
 ]
 
-def assign_colors_by_team(df_leaves):
+def assign_colors(df_leaves):
     """
-    Assigns a color to each person based on their team and position.
-    Returns a dict: {person_name: hex_color}
+    Assigns colors to people and teams.
+    Returns (person_color_map, team_color_map)
+    
+    Logic:
+    - Teams cycle through different palettes.
+    - Team Header gets a light shade (index 1 or 2).
+    - People get a gradient from index 3 to 8 (Mid to Dark).
     """
     person_color_map = {}
+    team_color_map = {}
     
     # Get Teams
     if 'Team' not in df_leaves.columns:
          people = df_leaves['Name'].unique()
          palette = COLOR_PALETTES[0]
-         indices = np.linspace(0, len(palette)-1, len(people), dtype=int)
+         indices = np.linspace(2, 8, len(people), dtype=int)
          for i, person in enumerate(people):
              person_color_map[person] = palette[indices[i]]
-         return person_color_map
+         
+         team_color_map['General'] = palette[1]
+         return person_color_map, team_color_map
 
     teams = df_leaves['Team'].unique()
     
     for team_idx, team in enumerate(teams):
         # Pick palette for this team (cycle if needed)
         palette = COLOR_PALETTES[team_idx % len(COLOR_PALETTES)]
+        
+        # Assign Team Header Color (Light shade for background)
+        team_color_map[team] = palette[1] # Index 1 is usually 100 (Light but visible)
         
         # Get people in this team
         team_people = df_leaves[df_leaves['Team'] == team]['Name'].unique()
@@ -57,24 +68,18 @@ def assign_colors_by_team(df_leaves):
         if num_people == 0:
             continue
             
-        # Distribute shades
-        # We want to use the full range [100 to 700] roughly?
-        # Let's use indices 1 to 8 to avoid too light (0) or too dark (9) labels visibility issues
-        # Or just use the whole range. The text is black, so very dark background might be an issue.
-        # But user wants gradients.
-        
-        # Taking indices from 2 (300) to 8 (800) for better contrast? 
-        # Or 1 (100) to 7 (700)
-        # Let's try to map to 0..9 but maybe skip 9 if possible.
+        # Distribute shades for people
+        # Use range 3 (300) to 8 (800) for good visibility and contrast against white
+        # If only 1 person, pick middle (5)
         
         if num_people == 1:
-            indices = [5] # Mid-range
+            indices = [5]
         else:
-            # Spread 0 to 8 (9 colors)
-            indices = np.linspace(0, 8, num_people, dtype=int)
+            # Linear space from 3 to 8
+            indices = np.linspace(3, 8, num_people, dtype=int)
             
         for i, person in enumerate(team_people):
             color_idx = indices[i]
             person_color_map[person] = palette[color_idx]
             
-    return person_color_map
+    return person_color_map, team_color_map

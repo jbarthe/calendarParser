@@ -32,11 +32,12 @@ def generate_excel_gantt(df_leaves):
 
     # 2. Setup Styles
     # Colors
-    from colors import assign_colors_by_team, COLOR_PALETTES
-    person_color_map = assign_colors_by_team(df_leaves)
+    from colors import assign_colors, COLOR_PALETTES
+    person_color_map, team_color_map = assign_colors(df_leaves)
     
     # Clean up hex for OpenPyXL (remove #)
     person_color_map_clean = {k: v.lstrip('#') for k, v in person_color_map.items()}
+    team_color_map_clean = {k: v.lstrip('#') for k, v in team_color_map.items()}
     
     header_fill = PatternFill(start_color="4B0082", end_color="4B0082", fill_type="solid")
     header_font = Font(color="FFFFFF", bold=True)
@@ -109,8 +110,11 @@ def generate_excel_gantt(df_leaves):
 
     for team in teams:
         # Team Header
+        team_hex = team_color_map_clean.get(team, "EEEEEE")
+        current_team_fill = PatternFill(start_color=team_hex, end_color=team_hex, fill_type="solid")
+        
         t_cell = ws.cell(row=row_idx, column=1, value=team)
-        t_cell.fill = team_fill
+        t_cell.fill = current_team_fill
         t_cell.font = team_font
         t_cell.border = border_all
         
@@ -118,6 +122,11 @@ def generate_excel_gantt(df_leaves):
         # Maybe just the name for now, or merge across?
         # Let's merge across all dates for the team separator line
         ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=total_days+1)
+        # Apply style to merged cells range
+        for c in range(1, total_days + 2):
+             ws.cell(row=row_idx, column=c).fill = current_team_fill
+             ws.cell(row=row_idx, column=c).border = border_all
+             
         t_cell.alignment = Alignment(horizontal='left', indent=1)
         
         row_idx += 1
