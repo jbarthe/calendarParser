@@ -149,6 +149,9 @@ def create_gantt_chart(df_leaves):
     if current_page_items:
         pages.append(current_page_items)
         
+    # Reverse pages to have the "Top" of the chart (Last teams added) as the first page
+    pages.reverse()
+        
     figures = []
     
     for i, page_items in enumerate(pages):
