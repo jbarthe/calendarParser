@@ -230,7 +230,7 @@ def create_gantt_chart(df_leaves):
                     last_y_offset = y_offset
                     
                     ax.broken_barh([(start_num, duration)], (y - bar_height/2, bar_height),
-                                   facecolors=person_color_map[person], edgecolor='none')
+                                   facecolors=person_color_map.get((person, team), '#cccccc'), edgecolor='none')
                     ax.text(mid_point, y + y_offset, label,
                             ha='center', va='center', fontsize=6, color='black')
                 

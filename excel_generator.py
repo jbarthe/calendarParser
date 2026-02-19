@@ -36,6 +36,7 @@ def generate_excel_gantt(df_leaves):
     person_color_map, team_color_map = assign_colors(df_leaves)
     
     # Clean up hex for OpenPyXL (remove #)
+    # Keys are now (Name, Team) tuples
     person_color_map_clean = {k: v.lstrip('#') for k, v in person_color_map.items()}
     team_color_map_clean = {k: v.lstrip('#') for k, v in team_color_map.items()}
     
@@ -164,7 +165,11 @@ def generate_excel_gantt(df_leaves):
                     continue
 
                 # Style
-                fill_color = person_color_map_clean[person]
+                # Lookup by (Name, Team)
+                # Ensure we have the team for this row.
+                # Since we are iterating df_leaves, row has Team.
+                p_team = row['Team']
+                fill_color = person_color_map_clean.get((person, p_team), 'CCCCCC')
                 fill = PatternFill(start_color=fill_color, end_color=fill_color, fill_type="solid")
                 
                 # Merge

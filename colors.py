@@ -47,7 +47,8 @@ def assign_colors(df_leaves):
          palette = COLOR_PALETTES[0]
          indices = np.linspace(2, 8, len(people), dtype=int)
          for i, person in enumerate(people):
-             person_color_map[person] = palette[indices[i]]
+             # Default to 'General' team if no team column
+             person_color_map[(person, 'General')] = palette[indices[i]]
          
          team_color_map['General'] = palette[1]
          return person_color_map, team_color_map
@@ -80,6 +81,7 @@ def assign_colors(df_leaves):
             
         for i, person in enumerate(team_people):
             color_idx = indices[i]
-            person_color_map[person] = palette[color_idx]
+            # Key by (Name, Team) tuple to handle same person in multiple teams
+            person_color_map[(person, team)] = palette[color_idx]
             
     return person_color_map, team_color_map
