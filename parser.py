@@ -197,6 +197,15 @@ def process_leave_data(df):
         # Clean col 0
         col0 = str(row.iloc[0]).strip() if pd.notna(row.iloc[0]) else ""
         
+        # GLOBAL IGNORE CHECK
+        # Filter out metadata rows immediately
+        # Check if col0 contains specific keywords
+        if col0:
+            name_upper = col0.upper()
+            ignore_list = ["PÉRIODE", "PERIODE", "CONGES", "FORMULAIRE", "INSTRUCTIONS", "SOLDE", "RTT", "ANCIENNETÉ", "PRÉSENCE", "PRESENCE", "RÉFÉRENCE", "REFERENCE", "COMMENTAIRE", "NOTE", "TOTAL", "RESTANT"]
+            if any(ig in name_upper for ig in ignore_list):
+                continue
+        
         # Check if this row is a Team Header
         # Heuristic: Col 0 has text, AND ALL other columns are empty.
         # This prevents a person who has no leave in Period 1 but has leave in Period 2 from being seen as a Team.
