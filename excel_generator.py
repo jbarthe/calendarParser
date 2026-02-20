@@ -164,12 +164,8 @@ def generate_excel_gantt(df_leaves):
                 except KeyError:
                     continue
 
-                # Style
-                # Lookup by (Name, Team)
-                # Ensure we have the team for this row.
-                # Since we are iterating df_leaves, row has Team.
-                p_team = row['Team']
-                fill_color = person_color_map_clean.get((person, p_team), 'CCCCCC')
+                # Style: lookup by (Name, Team) — `team` comes from the outer loop
+                fill_color = person_color_map_clean.get((person, team), 'CCCCCC')
                 fill = PatternFill(start_color=fill_color, end_color=fill_color, fill_type="solid")
                 
                 # Merge
